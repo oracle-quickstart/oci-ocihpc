@@ -37,4 +37,4 @@ done
 echo "Delete job has $JOB_STATUS"
 echo -e "\nDeleting Stack"
 oci resource-manager stack delete --stack-id $STACK_ID --force
-echo "\nSuccesfuly deleted Stack Id: $STACK_ID"
+echo -e "\nSuccesfuly deleted Stack Id: $STACK_ID"
