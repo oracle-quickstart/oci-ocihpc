@@ -1,0 +1,42 @@
+#!/bin/bash
+
+export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$OCIHPC_WORKDIR/common/util.sh"
+
+usage() {
+  cli_name=${0##*/}
+  echo "
+Oracle Cloud Infrastructure Easy HPC Deploy
+
+Usage: $cli_name [command]
+
+Commands:
+  init      Initialize deployment of an HPC solution
+  deploy    Deploy an HPC solution
+  delete    Delete a deployed HPC solution
+  list      List available solutions for deployment
+"
+  exit 1
+}
+
+case "$1" in
+  init)
+    "$OCIHPC_WORKDIR/exec/init.sh" "$2"
+    ;;
+  deploy)
+    "$OCIHPC_WORKDIR/exec/deploy.sh" "$2"
+    ;;
+  connect)
+    "$OCIHPC_WORKDIR/exec/connect.sh" "$2"
+    ;;
+  delete)
+    "$OCIHPC_WORKDIR/exec/delete.sh" "$2"
+    ;;
+  list)
+    "$OCIHPC_WORKDIR/exec/list.sh" "$2"
+    ;;  
+  *)
+    usage
+    ;;
+esac
