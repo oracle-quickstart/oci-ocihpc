@@ -28,7 +28,7 @@ CURRENT_DIR=$(pwd)
 CURRENT_DIR_BASENAME=$(basename $CURRENT_DIR)
 ZIP_FILE_PATH="$CURRENT_DIR/$PACKAGE.zip"
 CONFIG_FILE_PATH="$CURRENT_DIR/config.json"
-ZIP_FILE_URL="https://github.com/oracle-quickstart/oci-ocihpc/blob/master/packages/$PACKAGE/$PACKAGE.zip"
+ZIP_FILE_URL="https://github.com/oracle-quickstart/oci-ocihpc/raw/master/packages/$PACKAGE/$PACKAGE.zip"
 CONFIG_FILE_URL="https://raw.githubusercontent.com/oracle-quickstart/oci-ocihpc/master/packages/$PACKAGE/config.json"
 
 
