@@ -1,8 +1,12 @@
 {
-    "compartmentId": "",
     "variables": {
         "region": "",
         "tenancy_ocid": "",
-        "compartment_ocid": ""
+        "compartment_ocid": "",
+        "ad": "",
+        "bastion_ad": "",
+        "node_count": "",
+        "boot_volume_size": "",
+        "ssh_key": ""
     }
 }

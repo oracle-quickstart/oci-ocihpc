@@ -2,7 +2,7 @@
 
 set -e
 export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
-source "$OCIHPC_WORKDIR/common/util.sh"
+. "$OCIHPC_WORKDIR/../common/util.sh"
 
 usage() {
   cli_name=${0##*/}
