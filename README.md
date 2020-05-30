@@ -50,15 +50,11 @@ OpenFOAM
 ### 2 - Initialize
 Create a folder that you will use as the deployment source.
 
-```sh
-$ mkdir ocihpc-test
-```
-
 Change to that folder and run `ocihpc init <package name>`. `ocihpc` will download the necessary files to that folder.
 
-Example:
 
 ```
+$ mkdir ocihpc-test
 $ cd ocihpc-test
 $ ocihpc init ClusterNetwork
 
