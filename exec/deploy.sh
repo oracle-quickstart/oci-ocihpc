@@ -15,7 +15,6 @@ REGION=$(cat $CONFIG_FILE_PATH | jq -r .variables.region)
 RANDOM_NUMBER=$(( RANDOM % 10000 ))
 DEPLOYMENT_NAME=${PACKAGE}-$CURRENT_DIR_BASENAME-$RANDOM_NUMBER
 ORM_OUTPUT=$(unzip -p $PACKAGE.zip orm_output)
-IP_OUTPUT=$CURRENT_DIR/$DEPLOYMENT_NAME_access.info
 
 . "$OCIHPC_WORKDIR/../common/util.sh"
 
@@ -38,7 +37,7 @@ Commands:
 }
 
 rm -f $CURRENT_DIR/.info
-rm -f $IP_OUTPUT
+rm -f $CURRENT_DIR/$DEPLOYMENT_NAME.access
 
 CREATED_STACK_ID=$(oci resource-manager stack create --display-name "$DEPLOYMENT_NAME" --config-source $ZIP_FILE_PATH --from-json file://$CONFIG_FILE_PATH --compartment-id $COMPARTMENT_ID --region $REGION --terraform-version "0.12.x" --query 'data.id' --raw-output)
 echo "STACK_ID=${CREATED_STACK_ID}" > $CURRENT_DIR/.info
@@ -58,7 +57,7 @@ if [[ $JOB_STATUS == SUCCEEDED ]]
 then
   STACK_IP=$(oci resource-manager job get-job-tf-state --file - --job-id $CREATED_APPLY_JOB_ID --region $REGION | jq -r $ORM_OUTPUT)
   echo "STACK_IP=$STACK_IP" >> $CURRENT_DIR/.info
-  echo "You can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>" >> $IP_OUTPUT
+  echo -e "You can connect to your head node using the command:\nssh opc@$STACK_IP -i <location of the private key you used>" > $CURRENT_DIR/$DEPLOYMENT_NAME.access
   echo -e "\nSuccessfully deployed $DEPLOYMENT_NAME"
   echo -e "\nYou can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>"
   echo -e "\nYou can also find the IP address of the bastion/headnode in $IP_OUTPUT file"

@@ -37,7 +37,6 @@ CREATED_DESTROY_JOB_ID=$(oci resource-manager job create-destroy-job --stack-id 
 echo -e "\n"
 
 JOB_START_TIME=$SECONDS
-sleep 1
 while ! [[ $JOB_STATUS =~ ^(SUCCEEDED|FAILED) ]]
 do
   ELAPSED_TIME=$(show_elapsed_time $JOB_START_TIME)

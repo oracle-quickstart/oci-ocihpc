@@ -5,14 +5,14 @@
 ## Prerequisites
 
 ### Software needed
-The tool needs `oci` CLI, `unzip`, and `jq` installed in the system to run. It will check if they are installed and show an error message if they are not installed.
+The tool needs `oci` CLI, `unzip`, and `jq` to run. You will receive an error message if they are not installed.
 
 To install and configure OCI CLI, please follow the steps in [this link](https://docs.cloud.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
 
 `Unzip` and `jq` come installed in many linux distributions. If you need to install them, please check the tools' websites for installation.
 
 ### PATH settings
-You need to set the ocihpc tool as an executable and add the tool directory to your path.
+You need to set the `ocihpc` tool as an executable and add the tool directory to your path.
 
 Clone the repository:
 ```sh
@@ -51,7 +51,7 @@ OpenFOAM
 Create a folder that you will use as the deployment source.
 
 ```sh
-mkdir ocihpc-test
+$ mkdir ocihpc-test
 ```
 
 Change to that folder and run `ocihpc init <package name>`. `ocihpc` will download the necessary files to that folder.
@@ -59,14 +59,20 @@ Change to that folder and run `ocihpc init <package name>`. `ocihpc` will downlo
 Example:
 
 ```sh
-cd ocihpc-test
-ocihpc init ClusterNetwork
+$ cd ocihpc-test
+$ ocihpc init ClusterNetwork
+
+Downlading package: ClusterNetwork
+
+Package ClusterNetwork downloaded to /Users/opastirm/ocihpc-test/
+
+IMPORTANT: Edit the contents of the /Users/opastirm/ocihpc-test/config.json file before running ocihpc deploy command
 ```
 
 ### 3 - Deploy
 After you initialize, you can deploy the package with `ocihpc deploy <package name>`. This command will create a Stack on Oracle Cloud Resource Manager and deploy the package using it.
 
-INFO: The tool will create a deployment name that consists of <package name>-<current directory>-<random-number>.
+INFO: The tool will generate a deployment name that consists of _<package name>-<current directory>-<random-number>_.
 
 Example:
 
