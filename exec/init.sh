@@ -4,8 +4,11 @@ set -e
 
 export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PACKAGE=$1
+export PACKAGE="${PACKAGE%.*}"
 
-#. "$OCIHPC_WORKDIR/common/util.sh"
+. "$OCIHPC_WORKDIR/../common/util.sh"
+
+check_prereqs
 
 usage() {
   cli_name=${0##*/}
@@ -21,12 +24,12 @@ Commands:
   exit 1
 }
 
-CURRENT_DIR=$OCIHPC_WORKDIR
+CURRENT_DIR=$(pwd)
 CURRENT_DIR_BASENAME=$(basename $CURRENT_DIR)
 ZIP_FILE_PATH="$CURRENT_DIR/$PACKAGE.zip"
 CONFIG_FILE_PATH="$CURRENT_DIR/config.json"
-ZIP_FILE_URL="https://github.com/OguzPastirmaci/ocihpc/raw/update-1/packages/$PACKAGE/$PACKAGE.zip"
-CONFIG_FILE_URL="https://raw.githubusercontent.com/OguzPastirmaci/ocihpc/update-1/packages/$PACKAGE/config.json"
+ZIP_FILE_URL="https://github.com/oracle-quickstart/oci-ocihpc/blob/update-1/packages/$PACKAGE/$PACKAGE.zip"
+CONFIG_FILE_URL="https://raw.githubusercontent.com/oracle-quickstart/oci-ocihpc/update-1/packages/$PACKAGE/config.json"
 
 
 if curl --head --silent --fail $ZIP_FILE_URL > /dev/null;

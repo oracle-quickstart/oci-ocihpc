@@ -1,8 +1,11 @@
 #!/bin/bash
 
 export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export COUNT=$3
 
-source "$OCIHPC_WORKDIR/common/util.sh"
+. "$OCIHPC_WORKDIR/common/util.sh"
+
+check_prereqs
 
 usage() {
   cli_name=${0##*/}
@@ -25,10 +28,7 @@ case "$1" in
     "$OCIHPC_WORKDIR/exec/init.sh" "$2"
     ;;
   deploy)
-    "$OCIHPC_WORKDIR/exec/deploy.sh" "$2"
-    ;;
-  connect)
-    "$OCIHPC_WORKDIR/exec/connect.sh" "$2"
+    "$OCIHPC_WORKDIR/exec/deploy.sh" "$2" "$3"
     ;;
   delete)
     "$OCIHPC_WORKDIR/exec/delete.sh" "$2"

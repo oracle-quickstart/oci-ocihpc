@@ -4,28 +4,6 @@ red="\033[0;31m"
 green="\033[0;32m"
 yellow="\033[0;33m"
 
-zip_edit(){
-    echo "Usage: zipedit archive.zip file.txt"
-    unzip "$1" "$2" -d /tmp 
-    vi /tmp/$2 && zip -j --update "$1"  "/tmp/$2" 
-}
-
-parse_yaml() {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
-}
-
 cli_log() {
   script_name=${0##*/}
   timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -54,24 +32,53 @@ red() {
   echo -e "${red}${1}${end}"
 }
 
+check_prereqs () {
+if ! [ -x "$(command -v oci)" ]; then
+  echo 'Error: OCI CLI is not installed. Please follow the instructions in this link: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm' >&2
+  exit 1
+fi
 
-showLoading() {
-  mypid=$!
-  loadingText=$1
+if ! [ -x "$(command -v jq)" ]; then
+  echo 'Error: jq is not installed.' >&2
+  exit 1
+fi
 
-  echo -ne "$loadingText\r"
+if ! [ -x "$(command -v unzip)" ]; then
+  echo 'Error: unzip is not installed.' >&2
+  exit 1
+fi
+}
 
-  while kill -0 $mypid 2>/dev/null; do
-    echo -ne "$loadingText.\r"
-    sleep 0.5
-    echo -ne "$loadingText..\r"
-    sleep 0.5
-    echo -ne "$loadingText...\r"
-    sleep 0.5
-    echo -ne "\r\033[K"
-    echo -ne "$loadingText\r"
-    sleep 0.5
-  done
+is_node_count_available () {
+regex='^[0-9]+$'
+if ! [[ $1 =~ $regex ]] ; then
+  echo "Error: Node count should be a number, you entered '$1'"; exit 1
+elif grep -q "node_count" config.json ; then
+  change_count="$(jq --arg count $COUNT '.variables.node_count = $count' config.json)" && echo "${change_count}" > config.json
+else
+  echo "Changing the node count is not support with this package, deploying with defaults"
+  sleep 3
+fi
+}
 
-  echo "$loadingText...COMPLETED"
+show_elapsed_time () {
+START_TIME=$1
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+echo "[$(($ELAPSED_TIME/60))min $(($ELAPSED_TIME%60))sec]"   
+}
+
+ocihpc_connect() {
+host="$1"
+shift
+echo 1: $1
+  echo 2: $2
+  echo 3: $3
+  echo 4: $4
+shift
+echo 1: $1
+  echo 2: $2
+  echo 3: $3
+  echo 4: $4
+user=opc
+command ssh "$user@$host" "$@"
 }
