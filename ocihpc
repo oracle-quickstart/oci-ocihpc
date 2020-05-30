@@ -4,8 +4,6 @@ export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COUNT=${3:-2}
 export COUNT
 
-
-
 . "$OCIHPC_WORKDIR/common/util.sh"
 
 check_prereqs
