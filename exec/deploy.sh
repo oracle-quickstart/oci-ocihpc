@@ -10,6 +10,7 @@ CURRENT_DIR=$(pwd)
 CURRENT_DIR_BASENAME=$(basename $CURRENT_DIR)
 ZIP_FILE_PATH="$CURRENT_DIR/$PACKAGE.zip"
 CONFIG_FILE_PATH="$CURRENT_DIR/config.json"
+AD=$(cat $CONFIG_FILE_PATH | jq -r .variables.ad)
 COMPARTMENT_ID=$(cat $CONFIG_FILE_PATH| jq -r .variables."compartment_ocid")
 REGION=$(cat $CONFIG_FILE_PATH | jq -r .variables.region)
 RANDOM_NUMBER=$(( RANDOM % 10000 ))
@@ -22,6 +23,20 @@ ORM_OUTPUT=$(unzip -p $PACKAGE.zip orm_output)
 
 check_prereqs
 is_node_count_available $COUNT
+
+CHECK_IF_AUTHORIZED=$(oci limits resource-availability get --limit-name bm-hpc2-36-count --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 || true) 
+
+if ! echo "$CHECK_IF_AUTHORIZED" | grep -q NotAuthorizedOrNotFound
+then
+  read USED_IN_AD TOTAL_AVAILABLE_IN_AD < <(oci limits resource-availability get --limit-name bm-hpc2-36-count --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r -c '.[] | .used, .available' | xargs)
+  USABLE_IN_AD=$((TOTAL_AVAILABLE_IN_AD - USED_IN_AD))
+  if [ $USABLE_IN_AD -le $COUNT ]
+      then 
+        echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT nodes. Current available capacity is $USABLE_IN_AD nodes.\n" && exit 1
+  fi
+else 
+  echo "\nCould not query the number of available nodes in the availability domain you chose ($AD), proceeding with deployment"
+fi
 
 usage() {
   cli_name=${0##*/}
