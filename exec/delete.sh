@@ -36,6 +36,8 @@ CREATED_DESTROY_JOB_ID=$(oci resource-manager job create-destroy-job --stack-id 
 
 echo -e "\n"
 
+rm -f $CURRENT_DIR/$DEPLOYMENT_NAME.access
+
 JOB_START_TIME=$SECONDS
 
 while ! [[ $JOB_STATUS =~ ^(SUCCEEDED|FAILED) ]]

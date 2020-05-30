@@ -56,7 +56,6 @@ do
   sleep 15
 done
 
-
 if [[ $JOB_STATUS == SUCCEEDED ]]
 then
   STACK_IP=$(oci resource-manager job get-job-tf-state --file - --job-id $CREATED_APPLY_JOB_ID --region $REGION | jq -r $ORM_OUTPUT)
@@ -64,7 +63,7 @@ then
   echo -e "You can connect to your head node using the command:\nssh opc@$STACK_IP -i <location of the private key you used>" > $CURRENT_DIR/$DEPLOYMENT_NAME.access
   echo -e "\nSuccessfully deployed $DEPLOYMENT_NAME"
   echo -e "\nYou can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>"
-  echo -e "\nYou can also find the IP address of the bastion/headnode in $CURRENT_DIR/$DEPLOYMENT_NAME.access file"
+  echo -e "\nYou can also find the IP address of the bastion/headnode in $CURRENT_DIR/$DEPLOYMENT_NAME.access file\n"
 else
   echo -e "Deployment failed. Please check logs in the console. More info: https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads"
 fi

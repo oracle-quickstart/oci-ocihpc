@@ -54,10 +54,9 @@ is_node_count_available () {
   if ! [[ $1 =~ $regex ]] ; then
     echo "Error: Node count should be a number, you entered '$1'"; exit 1
   elif grep -q "node_count" config.json ; then
-    change_count="$(jq --arg count $COUNT '.variables.node_count = $count' config.json)" && echo "${change_count}" > config.json
+    change_count="$(jq --arg count $1 '.variables.node_count = $count' config.json)" && echo "${change_count}" > config.json
   else
-    echo "Changing the node count is not support with this package, deploying with defaults"
-    sleep 3
+    echo "Changing the node count is not supported with this package, deploying with defaults"
   fi
 }
 
