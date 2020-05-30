@@ -102,12 +102,10 @@ When deployment is completed, you will see the the bastion/headnode IP that you 
 ```
 Successfully deployed ClusterNetwork-ocihpc-test-7355
 
-You can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>
+You can connect to your head node using the command: ssh opc@$123.221.10.8 -i <location of the private key you used>
 
 You can also find the IP address of the bastion/headnode in ClusterNetwork-ocihpc-test-7355_access.info file
 ```
-
-You can use the `oci connect` command or the `ssh` command from your terminal to connect to your bastion/headnode.
 
 ### 5 - Delete
 When you are done with your deployment, you can delete by changing to the package folder and running `ocihpc delete <package name>`.
