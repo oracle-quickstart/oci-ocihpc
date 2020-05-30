@@ -44,7 +44,7 @@ echo "STACK_ID=${CREATED_STACK_ID}" > $CURRENT_DIR/.info
 echo "DEPLOYMENT_NAME=$DEPLOYMENT_NAME" >> $CURRENT_DIR/.info
 CREATED_APPLY_JOB_ID=$(oci resource-manager job create-apply-job --stack-id $CREATED_STACK_ID --execution-plan-strategy AUTO_APPROVED --region $REGION --query 'data.id' --raw-output)
 
-echo -e "Starting deployment...\n"
+echo -e "\nStarting deployment...\n"
 
 JOB_START_TIME=$SECONDS
 
@@ -65,5 +65,10 @@ then
   echo -e "\nYou can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>"
   echo -e "\nYou can also find the IP address of the bastion/headnode in $CURRENT_DIR/$DEPLOYMENT_NAME.access file\n"
 else
-  echo -e "Deployment failed. Please check logs in the console. More info: https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads"
+  LAST_MINUTE=$(( $(date +%s) - 300 ))
+  ERRORS_FROM_LAST_MINUTE=$(oci resource-manager job get-job-logs --job-id $CREATED_APPLY_JOB_ID --region $REGION --timestamp-greater-than-or-equal-to $LAST_MINUTE --limit 250 --sort-order ASC | jq -r '.data[] | select(.message | contains("Error")) .message')
+  echo -e "\nDeployment failed with the following error message:\n"
+  echo -e "$ERRORS_FROM_LAST_MINUTE"
+  echo -e "\nThe errors above may not include all the errors that caused the deployment to fail. For checking all logs in the console, please consult the following link:"
+  echo -e "https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads\n"
 fi
