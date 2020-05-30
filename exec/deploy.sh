@@ -44,7 +44,7 @@ echo "STACK_ID=${CREATED_STACK_ID}" > $CURRENT_DIR/.info
 echo "DEPLOYMENT_NAME=$DEPLOYMENT_NAME" >> $CURRENT_DIR/.info
 CREATED_APPLY_JOB_ID=$(oci resource-manager job create-apply-job --stack-id $CREATED_STACK_ID --execution-plan-strategy AUTO_APPROVED --region $REGION --query 'data.id' --raw-output)
 
-echo -e "\n"
+echo -e "Starting deployment...\n"
 
 JOB_START_TIME=$SECONDS
 
@@ -52,7 +52,7 @@ while ! [[ $JOB_STATUS =~ ^(SUCCEEDED|FAILED) ]]
 do
   ELAPSED_TIME=$(show_elapsed_time $JOB_START_TIME)
   echo -e "Deploying $DEPLOYMENT_NAME $ELAPSED_TIME"
-  JOB_STATUS=$(oci resource-manager job get --job-id ${CREATED_APPLY_JOB_ID} --region $REGION --query 'data."lifecycle-state"' --raw-output)
+  JOB_STATUS=$(oci resource-manager job get --job-id $CREATED_APPLY_JOB_ID --region $REGION --query 'data."lifecycle-state"' --raw-output)
   sleep 15
 done
 
