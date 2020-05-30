@@ -20,7 +20,7 @@ git clone https://github.com/oracle-quickstart/oci-ocihpc.git
 ```
 
 Set the tool as an executable:
-```sh
+```
 cd oci-ocihpc
 chmod +x ocihpc
 ```
@@ -58,7 +58,7 @@ Change to that folder and run `ocihpc init <package name>`. `ocihpc` will downlo
 
 Example:
 
-```sh
+```
 $ cd ocihpc-test
 $ ocihpc init ClusterNetwork
 
@@ -72,11 +72,11 @@ IMPORTANT: Edit the contents of the /Users/opastirm/ocihpc-test/config.json file
 ### 3 - Deploy
 After you initialize, you can deploy the package with `ocihpc deploy <package name>`. This command will create a Stack on Oracle Cloud Resource Manager and deploy the package using it.
 
-INFO: The tool will generate a deployment name that consists of _<package name>-<current directory>-<random-number>_.
+INFO: The tool will generate a deployment name that consists of `<package name>-<current directory>-<random-number>`.
 
 Example:
 
-```sh
+```
 $ ocihpc deploy ClusterNetwork
 
 Starting deployment...
@@ -91,7 +91,7 @@ For supported packages, you can set the number of nodes you want to deploy by ad
 
 For example, the following command will deploy a Cluster Network with 5 nodes:
 
-```sh
+```
 $ ocihpc deploy ClusterNetwork 5
 ```
 
@@ -103,7 +103,7 @@ For example, `ocihpc deploy ClusterNetwork` and `ocihpc deploy ClusterNetwork.zi
 ### 4 - Connect
 When deployment is completed, you will see the the bastion/headnode IP that you can connect to:
 
-```sh
+```
 Successfully deployed ClusterNetwork-ocihpc-test-7355
 
 You can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>
@@ -117,7 +117,7 @@ You can use the `oci connect` command or the `ssh` command from your terminal to
 When you are done with your deployment, you can delete by changing to the package folder and running `ocihpc delete <package name>`.
 
 Example:
-```sh
+```
 $ ocihpc delete ClusterNetwork
 
 Deleting ClusterNetwork-ocihpc-test-7355 [0min 0sec]
