@@ -50,35 +50,19 @@ fi
 }
 
 is_node_count_available () {
-regex='^[0-9]+$'
-if ! [[ $1 =~ $regex ]] ; then
-  echo "Error: Node count should be a number, you entered '$1'"; exit 1
-elif grep -q "node_count" config.json ; then
-  change_count="$(jq --arg count $COUNT '.variables.node_count = $count' config.json)" && echo "${change_count}" > config.json
-else
-  echo "Changing the node count is not support with this package, deploying with defaults"
-  sleep 3
-fi
+  regex='^[0-9]+$|^$|^\s$'
+  if ! [[ $1 =~ $regex ]] ; then
+    echo "Error: Node count should be a number, you entered '$1'"; exit 1
+  elif grep -q "node_count" config.json ; then
+    change_count="$(jq --arg count $COUNT '.variables.node_count = $count' config.json)" && echo "${change_count}" > config.json
+  else
+    echo "Changing the node count is not support with this package, deploying with defaults"
+    sleep 3
+  fi
 }
 
 show_elapsed_time () {
-START_TIME=$1
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo "[$(($ELAPSED_TIME/60))min $(($ELAPSED_TIME%60))sec]"   
-}
-
-ocihpc_connect() {
-host="$1"
-shift
-echo 1: $1
-  echo 2: $2
-  echo 3: $3
-  echo 4: $4
-shift
-echo 1: $1
-  echo 2: $2
-  echo 3: $3
-  echo 4: $4
-user=opc
-command ssh "$user@$host" "$@"
+  START_TIME=$1
+  ELAPSED_TIME=$(($SECONDS - $START_TIME))
+  echo "[$(($ELAPSED_TIME/60))min $(($ELAPSED_TIME%60))sec]"   
 }
