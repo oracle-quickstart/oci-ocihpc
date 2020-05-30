@@ -83,7 +83,7 @@ Deploying ClusterNetwork-ocihpc-test-7355 [0min 35sec]
 ...
 ```
 
-For supported packages, you can set the number of nodes you want to deploy by adding it to the `ocihpc deploy` command. If the package does not support it or if you don't provide a value the tool will deploy with the default numbers. 
+For supported packages, you can set the number of nodes you want to deploy by adding it to the `ocihpc deploy` command. If the package does not support it or if you don't provide a value, the tool will deploy with the default numbers. 
 
 For example, the following command will deploy a Cluster Network with 5 nodes:
 
