@@ -52,7 +52,7 @@ oci resource-manager stack delete --stack-id $STACK_ID --region $REGION --force
 
 if [[ $JOB_STATUS == SUCCEEDED ]]
 then
-  echo -e "\nSuccesfuly deleted $DEPLOYMENT_NAME\n"
+  echo -e "\nSuccesfully deleted $DEPLOYMENT_NAME\n"
 else
   echo -e "Delete failed. Please check logs in the console. More info: https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads"
 fi
