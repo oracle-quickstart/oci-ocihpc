@@ -49,7 +49,7 @@ if ! [ -x "$(command -v unzip)" ]; then
 fi
 }
 
-is_node_count_available () {
+check_if_node_count_is_available () {
   regex='^[0-9]+$|^$|^\s$'
   if ! [[ $1 =~ $regex ]] ; then
     echo "Error: Node count should be a number, you entered '$1'"; exit 1
@@ -64,4 +64,21 @@ show_elapsed_time () {
   START_TIME=$1
   ELAPSED_TIME=$(($SECONDS - $START_TIME))
   echo "[$(($ELAPSED_TIME/60))min $(($ELAPSED_TIME%60))sec]"   
+}
+
+check_if_authorized () {
+CHECK_IF_AUTHORIZED=$(oci limits resource-availability get --limit-name bm-hpc2-36-count --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 || true) 
+LIMIT_NAME="bm-hpc2-36-count"
+
+if ! echo "$CHECK_IF_AUTHORIZED" | grep -q NotAuthorizedOrNotFound
+then
+  read USED_IN_AD TOTAL_AVAILABLE_IN_AD < <(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r -c '.[] | .used, .available' | xargs)
+  USABLE_IN_AD=$((TOTAL_AVAILABLE_IN_AD - USED_IN_AD))
+  if [ $USABLE_IN_AD -le $COUNT ]
+      then 
+        echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT nodes. Currently available capacity is $USABLE_IN_AD nodes.\n" && exit 1
+  fi
+else 
+  echo -e "\nCould not query the number of available nodes in the availability domain you chose ($AD), proceeding with deployment."
+fi
 }

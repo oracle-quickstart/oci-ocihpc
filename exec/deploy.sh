@@ -5,38 +5,25 @@ set -e
 export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/" && pwd )"
 export PACKAGE=$1
 export PACKAGE="${PACKAGE%.*}"
+export CURRENT_DIR=$(pwd)
+export CURRENT_DIR_BASENAME=$(basename $CURRENT_DIR)
+export ZIP_FILE_PATH="$CURRENT_DIR/$PACKAGE.zip"
+export CONFIG_FILE_PATH="$CURRENT_DIR/config.json"
+export AD=$(cat $CONFIG_FILE_PATH | jq -r .variables.ad)
+export COMPARTMENT_ID=$(cat $CONFIG_FILE_PATH| jq -r .variables."compartment_ocid")
+export REGION=$(cat $CONFIG_FILE_PATH | jq -r .variables.region)
 
-CURRENT_DIR=$(pwd)
-CURRENT_DIR_BASENAME=$(basename $CURRENT_DIR)
-ZIP_FILE_PATH="$CURRENT_DIR/$PACKAGE.zip"
-CONFIG_FILE_PATH="$CURRENT_DIR/config.json"
-AD=$(cat $CONFIG_FILE_PATH | jq -r .variables.ad)
-COMPARTMENT_ID=$(cat $CONFIG_FILE_PATH| jq -r .variables."compartment_ocid")
-REGION=$(cat $CONFIG_FILE_PATH | jq -r .variables.region)
 RANDOM_NUMBER=$(( RANDOM % 10000 ))
 DEPLOYMENT_NAME=${PACKAGE}-$CURRENT_DIR_BASENAME-$RANDOM_NUMBER
 ORM_OUTPUT=$(unzip -p $PACKAGE.zip orm_output)
 
 . "$OCIHPC_WORKDIR/../common/util.sh"
 
-[ ! -f "$ZIP_FILE_PATH" ] && echo -e "\nPackage is not initialized. Please run ocihpc init <package> to initialize.\n" && exit 1
+[ ! -f "$ZIP_FILE_PATH" ] && echo -e "\nPackage is not initialized. Please run ocihpc init <package name> to initialize.\n" && exit 1
 
 check_prereqs
-is_node_count_available $COUNT
-
-CHECK_IF_AUTHORIZED=$(oci limits resource-availability get --limit-name bm-hpc2-36-count --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 || true) 
-
-if ! echo "$CHECK_IF_AUTHORIZED" | grep -q NotAuthorizedOrNotFound
-then
-  read USED_IN_AD TOTAL_AVAILABLE_IN_AD < <(oci limits resource-availability get --limit-name bm-hpc2-36-count --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r -c '.[] | .used, .available' | xargs)
-  USABLE_IN_AD=$((TOTAL_AVAILABLE_IN_AD - USED_IN_AD))
-  if [ $USABLE_IN_AD -le $COUNT ]
-      then 
-        echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT nodes. Current available capacity is $USABLE_IN_AD nodes.\n" && exit 1
-  fi
-else 
-  echo "\nCould not query the number of available nodes in the availability domain you chose ($AD), proceeding with deployment"
-fi
+check_if_node_count_is_available $COUNT
+check_if_authorized
 
 usage() {
   cli_name=${0##*/}
@@ -80,10 +67,10 @@ then
   echo -e "\nYou can connect to your head node using the command: ssh opc@$STACK_IP -i <location of the private key you used>"
   echo -e "\nYou can also find the IP address of the bastion/headnode in $CURRENT_DIR/$DEPLOYMENT_NAME.access file\n"
 else
-  LAST_MINUTE=$(( $(date +%s) - 300 ))
-  ERRORS_FROM_LAST_MINUTE=$(oci resource-manager job get-job-logs --job-id $CREATED_APPLY_JOB_ID --region $REGION --timestamp-greater-than-or-equal-to $LAST_MINUTE --limit 250 --sort-order ASC | jq -r '.data[] | select(.message | contains("Error")) .message')
+  TIME_RANGE=$(( $(date +%s) - 300 ))
+  ERRORS_IN_TIME_RANGE=$(oci resource-manager job get-job-logs --job-id $CREATED_APPLY_JOB_ID --region $REGION --timestamp-greater-than-or-equal-to $TIME_RANGE --limit 250 --sort-order ASC | jq -r '.data[] | select(.message | contains("Error")) .message')
   echo -e "\nDeployment failed with the following error message:\n"
-  echo -e "$ERRORS_FROM_LAST_MINUTE"
+  echo -e "$ERRORS_IN_TIME_RANGE"
   echo -e "\nThe errors above may not include all the errors that caused the deployment to fail. For checking all logs in the console, please consult the following link:"
   echo -e "https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads\n"
 fi
