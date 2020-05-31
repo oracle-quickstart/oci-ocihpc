@@ -54,5 +54,10 @@ if [[ $JOB_STATUS == SUCCEEDED ]]
 then
   echo -e "\nSuccesfully deleted $DEPLOYMENT_NAME\n"
 else
-  echo -e "Delete failed. Please check logs in the console. More info: https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads"
+  TIME_RANGE=$(( $(date +%s) - 300 ))
+  ERRORS_IN_TIME_RANGE=$(oci resource-manager job get-job-logs --job-id $CREATED_DESTROY_JOB_ID --region $REGION --timestamp-greater-than-or-equal-to $TIME_RANGE --limit 250 --sort-order ASC | jq -r '.data[] | select(.message | contains("Error")) .message')
+  echo -e "\nDeletion failed with the following error message:\n"
+  echo -e "$ERRORS_IN_TIME_RANGE"
+  echo -e "\nThe errors above may not include all the errors that caused the deployment to fail. For checking all logs in the console, please consult the following link:"
+  echo -e "https://docs.cloud.oracle.com/en-us/iaas/Content/ResourceManager/Tasks/managingstacksandjobs.htm#Downloads\n"
 fi
