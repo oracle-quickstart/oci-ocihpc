@@ -9,13 +9,16 @@ export CURRENT_DIR=$(pwd)
 export CURRENT_DIR_BASENAME=$(basename $CURRENT_DIR)
 export ZIP_FILE_PATH="$CURRENT_DIR/$PACKAGE.zip"
 export CONFIG_FILE_PATH="$CURRENT_DIR/config.json"
-export AD=$(cat $CONFIG_FILE_PATH | jq -r .variables.ad)
+export NODE_AD=$(cat $CONFIG_FILE_PATH | jq -r .variables.ad)
+export BASTION_NODE_AD=$(cat $CONFIG_FILE_PATH | jq -r .variables.bastion_ad)
 export COMPARTMENT_ID=$(cat $CONFIG_FILE_PATH| jq -r .variables."compartment_ocid")
 export REGION=$(cat $CONFIG_FILE_PATH | jq -r .variables.region)
 
 RANDOM_NUMBER=$(( RANDOM % 10000 ))
 DEPLOYMENT_NAME=${PACKAGE}-$CURRENT_DIR_BASENAME-$RANDOM_NUMBER
-ORM_OUTPUT=$(unzip -p $PACKAGE.zip orm_output)
+ORM_OUTPUT_QUERY=$(unzip -p $PACKAGE.zip ocihpc.json | jq -r .variables.orm_output_query)
+NODE_SHAPE=$(unzip -p $PACKAGE.zip ocihpc.json | jq -r .variables.node_shape)
+BASTION_NODE_SHAPE=$(unzip -p $PACKAGE.zip ocihpc.json | jq -r .variables.bastion_shape)
 
 . "$OCIHPC_WORKDIR/../common/util.sh"
 
@@ -23,7 +26,8 @@ ORM_OUTPUT=$(unzip -p $PACKAGE.zip orm_output)
 
 check_prereqs
 check_if_node_count_is_available $COUNT
-check_if_authorized
+check_if_authorized $NODE_SHAPE $NODE_AD
+check_if_authorized $BASTION_NODE_SHAPE $BASTION_NODE_AD
 
 usage() {
   cli_name=${0##*/}
@@ -60,7 +64,7 @@ done
 
 if [[ $JOB_STATUS == SUCCEEDED ]]
 then
-  STACK_IP=$(oci resource-manager job get-job-tf-state --file - --job-id $CREATED_APPLY_JOB_ID --region $REGION | jq -r $ORM_OUTPUT)
+  STACK_IP=$(oci resource-manager job get-job-tf-state --file - --job-id $CREATED_APPLY_JOB_ID --region $REGION | jq -r $ORM_OUTPUT_QUERY)
   echo "STACK_IP=$STACK_IP" >> $CURRENT_DIR/.info
   echo -e "You can connect to your head node using the command:\nssh opc@$STACK_IP -i <location of the private key you used>" > $CURRENT_DIR/$DEPLOYMENT_NAME.access
   echo -e "\nSuccessfully deployed $DEPLOYMENT_NAME"

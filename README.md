@@ -52,6 +52,8 @@ OpenFOAM
 ### 2 - Initialize
 Create a folder that you will use as the deployment source.
 
+IMPORTANT: Use a different folder per package. Do not initialize more than one package in the same folder. Otherwise, the tool will overwrite the previous one.
+
 Change to that folder and run `ocihpc init <package name>`. `ocihpc` will download the necessary files to that folder.
 
 

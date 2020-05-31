@@ -34,9 +34,7 @@ DEPLOYMENT_NAME=$(awk -F'DEPLOYMENT_NAME=' '{print $2}' $CURRENT_DIR/.info | xar
 
 CREATED_DESTROY_JOB_ID=$(oci resource-manager job create-destroy-job --stack-id $STACK_ID --execution-plan-strategy=AUTO_APPROVED --region $REGION --query 'data.id' --raw-output)
 
-echo -e "\n"
-
-rm -f $CURRENT_DIR/$DEPLOYMENT_NAME.access
+echo -e "\nStarting deletion...\n"
 
 JOB_START_TIME=$SECONDS
 
@@ -51,6 +49,7 @@ done
 if [[ $JOB_STATUS == SUCCEEDED ]]
 then
   oci resource-manager stack delete --stack-id $STACK_ID --region $REGION --force
+  rm -f $CURRENT_DIR/$DEPLOYMENT_NAME.access
   echo -e "\nSuccesfully deleted $DEPLOYMENT_NAME\n"
 else
   TIME_RANGE=$(( $(date +%s) - 300 ))

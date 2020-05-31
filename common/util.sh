@@ -67,18 +67,23 @@ show_elapsed_time () {
 }
 
 check_if_authorized () {
-CHECK_IF_AUTHORIZED=$(oci limits resource-availability get --limit-name bm-hpc2-36-count --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 || true) 
-LIMIT_NAME="bm-hpc2-36-count"
-
-if ! echo "$CHECK_IF_AUTHORIZED" | grep -q NotAuthorizedOrNotFound
+SHAPE=$1
+AD=$2
+LIMIT_NAME=$(echo "${SHAPE//./-}-count" | awk '{print tolower($0)}')
+#CHECK_IF_AUTHORIZED=$(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 || true) 
+echo -e "\nChecking capacity for shape $SHAPE in availability domain $AD"
+if oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 | grep -q NotAuthorizedOrNotFound
 then
-  read USED_IN_AD TOTAL_AVAILABLE_IN_AD < <(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r -c '.[] | .used, .available' | xargs)
-  USABLE_IN_AD=$((TOTAL_AVAILABLE_IN_AD - USED_IN_AD))
-  if [ $USABLE_IN_AD -le $COUNT ]
-      then 
-        echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT nodes. Currently available capacity is $USABLE_IN_AD nodes.\n" && exit 1
-  fi
-else 
   echo -e "\nCould not query the number of available nodes in the availability domain you chose ($AD), proceeding with deployment."
+else 
+    AVAILABLE_IN_AD=$(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r .data.available)
+    if [ $AVAILABLE_IN_AD -le $COUNT ]
+      then 
+        echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT $SHAPE nodes. Currently available capacity is $AVAILABLE_IN_AD nodes. Please choose a different domain or shape.\n" && exit 1
+      else
+        echo -e "Available capacity confirmed. Currently available capacity for $SHAPE in availability domain $AD: $AVAILABLE_IN_AD."
+  fi
 fi
 }
+
+

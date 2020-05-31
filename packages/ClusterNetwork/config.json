@@ -6,7 +6,6 @@
         "ad": "",
         "bastion_ad": "",
         "node_count": "",
-        "boot_volume_size": "",
         "ssh_key": ""
     }
 }
