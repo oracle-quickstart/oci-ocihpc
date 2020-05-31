@@ -9,6 +9,8 @@ The tool needs `oci` CLI, `unzip`, and `jq` to run. You will receive an error me
 
 To install and configure OCI CLI, please follow the steps in [this link](https://docs.cloud.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
 
+The OCI user account you use in OCI CLI should have the necessary policies configured for OCI Resource Manager. Please check [this link](https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingstacksandjobs.htm) for information on required policies.
+
 `Unzip` and `jq` come installed in many linux distributions. If you need to install them, please check the tools' websites for installation.
 
 ### PATH settings
