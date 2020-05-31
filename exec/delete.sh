@@ -48,10 +48,9 @@ do
   sleep 15
 done
 
-oci resource-manager stack delete --stack-id $STACK_ID --region $REGION --force
-
 if [[ $JOB_STATUS == SUCCEEDED ]]
 then
+  oci resource-manager stack delete --stack-id $STACK_ID --region $REGION --force
   echo -e "\nSuccesfully deleted $DEPLOYMENT_NAME\n"
 else
   TIME_RANGE=$(( $(date +%s) - 300 ))
