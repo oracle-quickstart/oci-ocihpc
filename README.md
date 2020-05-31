@@ -110,7 +110,7 @@ You can also find the IP address of the bastion/headnode in ClusterNetwork-ocihp
 ```
 
 ### 5 - Delete
-When you are done with your deployment, you can delete by changing to the package folder and running `ocihpc delete <package name>`.
+When you are done with your deployment, you can delete it by changing to the package folder and running `ocihpc delete <package name>`.
 
 Example:
 ```
