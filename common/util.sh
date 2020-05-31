@@ -34,7 +34,7 @@ red() {
 
 check_prereqs () {
 if ! [ -x "$(command -v oci)" ]; then
-  echo 'Error: OCI CLI is not installed. Please follow the instructions in this link: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm' >&2
+  echo 'Error: OCI CLI is not installed. Please follow the instructions in this link to install: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm' >&2
   exit 1
 fi
 

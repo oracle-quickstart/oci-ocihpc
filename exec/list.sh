@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+
 export OCIHPC_WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 . "$OCIHPC_WORKDIR/../common/util.sh"
 
@@ -19,4 +20,4 @@ Commands:
 }
 
 echo -e "\nList of available packages:\n"
-echo -e "$(curl -s https://raw.githubusercontent.com/OguzPastirmaci/ocihpc/master/packages/catalog)\n"
+echo -e "$(curl -s https://raw.githubusercontent.com/oracle-quickstart/oci-ocihpc/master/packages/catalog)\n"
