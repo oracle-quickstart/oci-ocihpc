@@ -81,7 +81,7 @@ else
       then 
         echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT $SHAPE nodes. Currently available capacity is $AVAILABLE_IN_AD nodes. Please choose a different domain or shape.\n" && exit 1
       else
-        echo -e "Available capacity confirmed. Currently available capacity for $SHAPE in availability domain $AD: $AVAILABLE_IN_AD."
+        echo -e "Available capacity confirmed. Currently available capacity for $SHAPE in availability domain $AD: $AVAILABLE_IN_AD"
   fi
 fi
 }

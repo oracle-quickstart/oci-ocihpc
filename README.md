@@ -18,18 +18,18 @@ You need to set the `ocihpc` tool as an executable and add the tool directory to
 
 Clone the repository:
 ```sh
-git clone https://github.com/oracle-quickstart/oci-ocihpc.git
+$ git clone https://github.com/oracle-quickstart/oci-ocihpc.git
 ```
 
 Set the tool as an executable:
 ```
-cd oci-ocihpc
-chmod +x ocihpc
+$ cd oci-ocihpc
+$ chmod +x ocihpc
 ```
 
 Add the tool directory to your path:
 ```sh
-export PATH=$PATH:<the path where you cloned the repository into>
+$ export PATH=$PATH:<the path where you cloned the repository into>
 ```
 
 ## Using ocihpc
@@ -70,7 +70,31 @@ IMPORTANT: Edit the contents of the /Users/opastirm/ocihpc-test/config.json file
 ```
 
 ### 3 - Deploy
-After you initialize, you can deploy the package with `ocihpc deploy <package name>`. This command will create a Stack on Oracle Cloud Resource Manager and deploy the package using it.
+Before deploying, you need to change the values in `config.json` file. The variables depend on the package you deploy. An example `config.json` for Cluster Network would look like this:
+
+```json
+{
+  "variables": {
+    "region": "us-phoenix-1",
+    "tenancy_ocid": "ocid1.tenancy.oc1.....utinobtayaykdasoygtnpko7buq",
+    "compartment_ocid": "ocid1.compartment.oc1..hnus3q",
+    "ad": "kWVD:PHX-AD-1",
+    "bastion_ad": "kWVD:PHX-AD-2",
+    "node_count": "2",
+    "ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAA......W6 opastirm@opastirm-mac"
+  }
+}
+```
+
+After you change the values in `config.json`, you can deploy the package with `ocihpc deploy <package name>`. This command will create a Stack on Oracle Cloud Resource Manager and deploy the package using it.
+
+For supported packages, you can set the number of nodes you want to deploy by adding it to the `ocihpc deploy` command. If the package does not support it or if you don't provide a value, the tool will deploy with the default numbers. 
+
+For example, the following command will deploy a Cluster Network with 5 nodes:
+
+```
+$ ocihpc deploy ClusterNetwork 5
+```
 
 INFO: The tool will generate a deployment name that consists of `<package name>-<current directory>-<random-number>`.
 
@@ -85,14 +109,6 @@ Deploying ClusterNetwork-ocihpc-test-7355 [0min 0sec]
 Deploying ClusterNetwork-ocihpc-test-7355 [0min 17sec]
 Deploying ClusterNetwork-ocihpc-test-7355 [0min 35sec]
 ...
-```
-
-For supported packages, you can set the number of nodes you want to deploy by adding it to the `ocihpc deploy` command. If the package does not support it or if you don't provide a value, the tool will deploy with the default numbers. 
-
-For example, the following command will deploy a Cluster Network with 5 nodes:
-
-```
-$ ocihpc deploy ClusterNetwork 5
 ```
 
 TIP: When running the `ocihpc deploy <package name>` command, your shell might autocomplete it to the name of the zip file in the folder. This is fine. The tool will correct it, you don't need to delete the .zip extension from the command.
