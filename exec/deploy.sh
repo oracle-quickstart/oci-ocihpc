@@ -25,9 +25,9 @@ BASTION_NODE_SHAPE=$(unzip -p $PACKAGE.zip ocihpc.json | jq -r .variables.bastio
 [ ! -f "$ZIP_FILE_PATH" ] && echo -e "\nPackage is not initialized. Please run ocihpc init <package name> to initialize.\n" && exit 1
 
 check_prereqs
-check_if_node_count_is_available $COUNT
-check_if_authorized $NODE_SHAPE $NODE_AD
-check_if_authorized $BASTION_NODE_SHAPE $BASTION_NODE_AD
+check_node_count $COUNT
+check_limits $NODE_SHAPE $NODE_AD
+check_limits $BASTION_NODE_SHAPE $BASTION_NODE_AD
 
 usage() {
   cli_name=${0##*/}

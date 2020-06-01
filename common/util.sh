@@ -16,10 +16,6 @@ export_config() {
    export OCI_REGION=$(awk -F'region=' '{print $2}' ~/.oci/config  | xargs)
 }
 
-newline() {
-    echo -e "\n$1"
-}
-
 green() {
   echo -e "${green}${1}${end}"
 }
@@ -49,7 +45,7 @@ if ! [ -x "$(command -v unzip)" ]; then
 fi
 }
 
-check_if_node_count_is_available () {
+check_node_count () {
   regex='^[0-9]+$|^$|^\s$'
   if ! [[ $1 =~ $regex ]] ; then
     echo "Error: Node count should be a number, you entered '$1'"; exit 1
@@ -66,24 +62,23 @@ show_elapsed_time () {
   echo "[$(($ELAPSED_TIME/60))min $(($ELAPSED_TIME%60))sec]"   
 }
 
-check_if_authorized () {
-SHAPE=$1
-AD=$2
-LIMIT_NAME=$(echo "${SHAPE//./-}-count" | awk '{print tolower($0)}')
-#CHECK_IF_AUTHORIZED=$(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 || true) 
-echo -e "\nChecking capacity for shape $SHAPE in availability domain $AD"
-if oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 | grep -q NotAuthorizedOrNotFound
-then
-  echo -e "\nCould not query the number of available nodes in the availability domain you chose ($AD), proceeding with deployment."
-else 
-    AVAILABLE_IN_AD=$(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r .data.available)
-    if [ $AVAILABLE_IN_AD -le $COUNT ]
-      then 
-        echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT $SHAPE nodes. Currently available capacity is $AVAILABLE_IN_AD nodes. Please choose a different domain or shape.\n" && exit 1
-      else
-        echo -e "Available capacity confirmed. Currently available capacity for $SHAPE in availability domain $AD: $AVAILABLE_IN_AD"
+check_limits () {
+  SHAPE=$1
+  AD=$2
+  LIMIT_NAME=$(echo "${SHAPE//./-}-count" | awk '{print tolower($0)}')
+  echo -e "\nChecking capacity for instance shape $SHAPE in availability domain $AD"
+  if oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION 2>&1 | grep -q NotAuthorizedOrNotFound
+  then
+    echo -e "\nCould not query the number of available nodes in the availability domain you chose ($AD), proceeding with deployment."
+  else 
+      AVAILABLE_IN_AD=$(oci limits resource-availability get --limit-name $LIMIT_NAME --service-name compute --compartment-id $COMPARTMENT_ID --availability-domain $AD --region $REGION | jq -r .data.available)
+      if [ $AVAILABLE_IN_AD -le $COUNT ]
+        then 
+          echo -e "\nThe availability domain you chose ($AD) does not have enough capacity to deploy $COUNT $SHAPE nodes. Currently available capacity is $AVAILABLE_IN_AD nodes. Please choose a different availability domain or instance shape.\n" && exit 1
+        else
+          echo -e "Available capacity confirmed. Currently available capacity for $SHAPE in availability domain $AD: $AVAILABLE_IN_AD"
+    fi
   fi
-fi
 }
 
 
