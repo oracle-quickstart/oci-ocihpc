@@ -145,11 +145,6 @@ Deploying ClusterNetwork-ocihpc-test-7355 [0min 35sec]
 ...
 ```
 
-TIP: When running the `ocihpc deploy <stack name>` command, your shell might autocomplete it to the name of the zip file in the folder. This is fine. The tool will correct it, you don't need to delete the .zip extension from the command.
-
-For example, `ocihpc deploy ClusterNetwork` and `ocihpc deploy ClusterNetwork.zip` are both valid commands.
-
-
 ### 5 - Connect
 When deployment is completed, you will see the the bastion/headnode IP that you can connect to:
 
