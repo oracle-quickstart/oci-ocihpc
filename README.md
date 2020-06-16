@@ -5,11 +5,7 @@
 ## Prerequisites
 The OCI user account you use in `ocihpc` should have the necessary policies configured for OCI Resource Manager. Please check [this link](https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingstacksandjobs.htm) for information on required policies.
 
-### [Installing ocihpc on Linux](https://github.com/oracle-quickstart/oci-ocihpc#installing-ocihpc-on-linux)
-
-### [Installing ocihpc on macOS](https://github.com/oracle-quickstart/oci-ocihpc#installing-ocihpc-on-macos)
-
-### [Installing ocihpc on Windows](https://github.com/oracle-quickstart/oci-ocihpc#installing-ocihpc-on-windows)
+## Installing ocihpc
 
 ### Installing ocihpc on Linux
 
