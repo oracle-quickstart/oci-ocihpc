@@ -97,7 +97,7 @@ Change to that folder and run `ocihpc init <stack name>`. `ocihpc` will download
 ```
 $ mkdir ocihpc-test
 $ cd ocihpc-test
-$ ocihpc init ClusterNetwork
+$ ocihpc init --stack ClusterNetwork
 
 Downloading stack: ClusterNetwork
 
