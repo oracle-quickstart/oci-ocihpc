@@ -59,7 +59,7 @@ ocihpc version
 
 3. Test that it works.
 ```sh
-ocihpc version 
+ocihpc.exe version 
 ```
 
 
