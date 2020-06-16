@@ -121,7 +121,7 @@ Before deploying, you need to change the values in `config.json` file. The varia
 }
 ```
 
-After you change the values in `config.json`, you can deploy the stack with `ocihpc deploy <stack name>`. This command will create a Stack on Oracle Cloud Resource Manager and deploy the stack using it.
+After you change the values in `config.json`, you can deploy the stack with `ocihpc deploy <arguments>`. This command will create a Stack on Oracle Cloud Resource Manager and deploy the stack using it.
 
 For supported stacks, you can set the number of nodes you want to deploy by adding it to the `ocihpc deploy` command. If the stack does not support it or if you don't provide a value, the tool will deploy with the default numbers. 
 
