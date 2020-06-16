@@ -138,8 +138,6 @@ Example:
 ```
 $ ocihpc deploy --stack ClusterNetwork --node-count 5 --region us-ashburn-1 --compartment-id ocid1.compartment.oc1..6zvhnus3q
 
-Starting deployment...
-
 Deploying ClusterNetwork-ocihpc-test-7355 [0min 0sec]
 Deploying ClusterNetwork-ocihpc-test-7355 [0min 17sec]
 Deploying ClusterNetwork-ocihpc-test-7355 [0min 35sec]
