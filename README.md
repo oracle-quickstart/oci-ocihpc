@@ -1,4 +1,4 @@
-# ocihpc - Oracle Cloud Infrastructure Easy HPC deployment tool
+# ocihpc - Oracle Cloud Infrastructure HPC deployment tool
 
 `ocihpc` is a tool for simplifying deployments of HPC applications in Oracle Cloud Infrastructure (OCI).
 
