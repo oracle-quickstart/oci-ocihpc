@@ -25,16 +25,16 @@ Example command: ocihpc get logs
 
 	Run: func(cmd *cobra.Command, args []string) {
 
+		if _, err := os.Stat(".stackinfo.json"); os.IsNotExist(err) || getJobID() == "" {
+			fmt.Printf("\nError: Couldn't find a deployed stack here. Please check if this is the correct location.\n\n")
+			os.Exit(1)
+		}
+
 		provider := common.DefaultConfigProvider()
 		client, err := resourcemanager.NewResourceManagerClientWithConfigurationProvider(provider)
 		helpers.FatalIfError(err)
 
 		ctx := context.Background()
-
-		if _, err := os.Stat(".stackinfo.json"); os.IsNotExist(err) || getJobID() == "" {
-			fmt.Printf("\nError: Couldn't find a deployed stack here. Please check if this is the correct location.\n\n")
-			os.Exit(1)
-		}
 
 		jobID := getJobID()
 		logs, _ := getTFLogs(ctx, provider, client, jobID)

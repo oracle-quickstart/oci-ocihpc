@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version = "1.0.0"
+
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print ocihpc version information",
@@ -16,7 +18,7 @@ var versionCmd = &cobra.Command{
 Example command: ocihpc version
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("ocihpc 1.0.0 %s/%s\n", runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("ocihpc %s %s/%s\n", version, runtime.GOOS, runtime.GOARCH)
 	},
 }
 
