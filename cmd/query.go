@@ -3,17 +3,21 @@
 package cmd
 
 var outputQuery = map[string]string{
-	"ClusterNetwork": "bastion",
+	"ClusterNetwork":    "bastion",
+	"CFDClusterNetwork": "bastion",
 }
 
 var stackUser = map[string]string{
-	"ClusterNetwork": "opc",
+	"ClusterNetwork":    "opc",
+	"CFDClusterNetwork": "opc",
 }
 
 var stackVersion = map[string]string{
-	"ClusterNetwork": "0.12.x",
+	"ClusterNetwork":    "0.12.x",
+	"CFDClusterNetwork": "0.12.x",
 }
 
 var defaultNodeCount = map[string]string{
-	"ClusterNetwork": "2",
+	"ClusterNetwork":    "2",
+	"CFDClusterNetwork": "2",
 }
