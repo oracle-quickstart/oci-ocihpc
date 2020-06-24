@@ -1,0 +1,14 @@
+{
+    "ClusterNetwork": {
+        "outputQuery": "bastion",
+        "stackUser": "opc",
+        "stackVersion": "0.12.x",
+        "defaultNodeCount": "2"
+    },
+    "CFDClusterNetwork": {
+        "outputQuery": "bastion",
+        "stackUser": "opc",
+        "stackVersion": "0.12.x",
+        "defaultNodeCount": "2"
+    }
+}

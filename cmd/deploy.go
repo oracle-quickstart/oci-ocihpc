@@ -53,6 +53,7 @@ Example command: ocihpc deploy --stack ClusterNetwork --node-count 2 --region us
 			}
 		}
 
+		getStackQuery()
 		addStackInfo(s)
 		region, _ := cmd.Flags().GetString("region")
 		compartmentID, _ := cmd.Flags().GetString("compartment-id")
@@ -91,7 +92,7 @@ func init() {
 	deployCmd.Flags().StringP("stack", "s", "", "Name of the stack you want to deploy.")
 	deployCmd.MarkFlagRequired("stack")
 
-	deployCmd.Flags().StringP("node-count", "n", defaultNodeCount[s.SourceStackName], "Number of nodes to deploy.")
+	deployCmd.Flags().StringP("node-count", "n", query[stack].(map[string]interface{})["defaultNodeCount"], "Number of nodes to deploy.")
 }
 
 func createStack(ctx context.Context, provider common.ConfigurationProvider, client resourcemanager.ResourceManagerClient, compartment string, region string, stack string, nodeCount string) string {
@@ -152,7 +153,7 @@ func createStack(ctx context.Context, provider common.ConfigurationProvider, cli
 			DisplayName:      common.String(s.DeployedStackName),
 			Description:      common.String(fmt.Sprintf("Deployed with ocihpc")),
 			Variables:        config,
-			TerraformVersion: common.String(stackVersion[stack]),
+			TerraformVersion: common.String(query[stack].(map[string]interface{})["stackVersion"]),
 		},
 	}
 
@@ -215,9 +216,9 @@ func createApplyJob(ctx context.Context, provider common.ConfigurationProvider, 
 			tfStateResp, _ := client.GetJobTfState(ctx, tfStateReq)
 			body, _ := ioutil.ReadAll(tfStateResp.Content)
 			helpers.FatalIfError(err)
-			s.StackIP = getOutputQuery(string(body), outputQuery[stack])
+			s.StackIP = getOutputQuery(string(body), query[stack].(map[string]interface{})["outputQuery"])
 
-			fmt.Printf("\nYou can connect to your bastion/headnode using the command: ssh opc@%s -i <location of the private key>\n\n", s.StackIP)
+			fmt.Printf("\nYou can connect to your bastion/headnode using the command: ssh %s@%s -i <location of the private key>\n\n", query[stack].(map[string]interface{})["stackUser"], s.StackIP)
 			break
 		} else if readResp.LifecycleState == "FAILED" {
 			fmt.Printf("\nDeployment failed. Please note that there might be some resources that are already created. Run 'ocihpc delete --stack %s' to delete those resources.\n", stack)

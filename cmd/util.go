@@ -140,3 +140,17 @@ func getConfirmation(prompt string) bool {
 		return getConfirmation(prompt)
 	}
 }
+
+func getStackQuery() map[string]interface{} {
+	url := "https://raw.githubusercontent.com/oracle-quickstart/oci-ocihpc/master/stacks/stackQuery.json"
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var query map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return query
+}
