@@ -141,18 +141,26 @@ func getConfirmation(prompt string) bool {
 	}
 }
 
-func getStackQuery(stack string, value string) {
+func getStackQuery(stack string, value string) string {
 	url := "https://raw.githubusercontent.com/oracle-quickstart/oci-ocihpc/master/stacks/stackQuery.json"
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	var query map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&query)
+	defer resp.Body.Close()
+
+	dec := json.NewDecoder(resp.Body)
+	if dec == nil {
+		panic("Failed to start decoding JSON data")
+	}
+
+	json := make(map[string]interface{})
+	err = dec.Decode(&json)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	//str := fmt.Sprint(query[stack].(map[string]interface{})[value])
-	fmt.Sprint(query[stack].(map[string]interface{})[value])
-	//return str
+
+	r := json[stack].(map[string]interface{})[value]
+	str := fmt.Sprint(r)
+	return (str)
 }
