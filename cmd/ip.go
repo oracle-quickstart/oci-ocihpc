@@ -21,7 +21,7 @@ Example command: ocihpc get ip
 		if _, err := os.Stat(".stackinfo.json"); err == nil {
 			if getStackIP() != "" {
 				stackName := getSourceStackName()
-				getStackQuery()
+				query := getStackQuery()
 				fmt.Printf("\nYou can connect to your bastion/headnode using the following command:\n\n")
 				fmt.Printf("ssh %s@%s -i <location of the private key>\n\n", query[stackName].(map[string]interface{})["stackUser"], getStackIP())
 			} else if getStackIP() == "" {
