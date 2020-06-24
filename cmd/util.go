@@ -152,5 +152,6 @@ func getStackQuery(stack string, value string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return query[stack].(map[string]interface{})[value]
+	str := fmt.Sprint(query[stack].(map[string]interface{})[value])
+	return str
 }
