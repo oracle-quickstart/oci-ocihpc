@@ -91,7 +91,7 @@ func init() {
 	deployCmd.Flags().StringP("stack", "s", "", "Name of the stack you want to deploy.")
 	deployCmd.MarkFlagRequired("stack")
 
-	deployCmd.Flags().StringP("node-count", "n", getStackQuery(s.SourceStackName, "defaultNodeCount"), "Number of nodes to deploy.")
+	deployCmd.Flags().StringP("node-count", "n", "", "Number of nodes to deploy.")
 }
 
 func createStack(ctx context.Context, provider common.ConfigurationProvider, client resourcemanager.ResourceManagerClient, compartment string, region string, stack string, nodeCount string) string {
