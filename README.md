@@ -11,7 +11,7 @@ The OCI user account you use in `ocihpc` should have the necessary policies conf
 
 1. Download the latest release with the following command and extract it:
 ```sh
-curl -LO https://github.com/oracle-quickstart/oci-ocihpc/releases/download/v1.0.1/ocihpc_v1.0.1_linux_x86_64.tar.gz
+curl -LO https://github.com/oracle-quickstart/oci-ocihpc/releases/download/v1.0.2/ocihpc_v1.0.2_linux_x86_64.tar.gz
 ```
 
 2. Make the ocihpc binary executable.
@@ -33,7 +33,7 @@ ocihpc version
 
 1. Download the latest release with the following command and extract it:
 ```sh
-curl -LO https://github.com/oracle-quickstart/oci-ocihpc/releases/download/v1.0.1/ocihpc_v1.0.1_darwin_x86_64.tar.gz
+curl -LO https://github.com/oracle-quickstart/oci-ocihpc/releases/download/v1.0.2/ocihpc_v1.0.2_darwin_x86_64.tar.gz
 ```
 
 2. Make the ocihpc binary executable.
@@ -54,7 +54,7 @@ ocihpc version
 ### Installing ocihpc on Windows
 
 
-1. Download the latest release from [this link](https://github.com/oracle-quickstart/oci-ocihpc/releases/download/v1.0.1/ocihpc_v1.0.1_windows_x86_64.zip) and extract it.
+1. Download the latest release from [this link](https://github.com/oracle-quickstart/oci-ocihpc/releases/download/v1.0.2/ocihpc_v1.0.2_windows_x86_64.zip) and extract it.
 
 2. Add the ocihpc binary to your PATH.
 
