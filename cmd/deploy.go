@@ -83,8 +83,6 @@ Example command: ocihpc deploy --stack ClusterNetwork --node-count 2 --region us
 func init() {
 	rootCmd.AddCommand(deployCmd)
 
-	query := getStackQuery()
-
 	deployCmd.Flags().StringP("compartment-id", "c", "", "Unique identifier (OCID) of the compartment that the stack will be deployed in.")
 	deployCmd.MarkFlagRequired("compartment-id")
 
@@ -93,7 +91,7 @@ func init() {
 	deployCmd.Flags().StringP("stack", "s", "", "Name of the stack you want to deploy.")
 	deployCmd.MarkFlagRequired("stack")
 
-	deployCmd.Flags().StringP("node-count", "n", query[s.SourceStackName].(map[string]interface{})["defaultNodeCount"], "Number of nodes to deploy.")
+	deployCmd.Flags().StringP("node-count", "n", getStackQuery(s.SourceStackName, "defaultNodeCount"), "Number of nodes to deploy.")
 }
 
 func createStack(ctx context.Context, provider common.ConfigurationProvider, client resourcemanager.ResourceManagerClient, compartment string, region string, stack string, nodeCount string) string {
@@ -145,7 +143,6 @@ func createStack(ctx context.Context, provider common.ConfigurationProvider, cli
 		fmt.Printf("\nChanging the node count is not supported with the stack %s, deploying stack with defaults.\n", stack)
 	}
 
-	query := getStackQuery()
 	req := resourcemanager.CreateStackRequest{
 		CreateStackDetails: resourcemanager.CreateStackDetails{
 			CompartmentId: common.String(compartment),
@@ -155,7 +152,7 @@ func createStack(ctx context.Context, provider common.ConfigurationProvider, cli
 			DisplayName:      common.String(s.DeployedStackName),
 			Description:      common.String(fmt.Sprintf("Deployed with ocihpc")),
 			Variables:        config,
-			TerraformVersion: common.String(query[stack].(map[string]interface{})["stackVersion"]),
+			TerraformVersion: common.String(getStackQuery(s.SourceStackName, "stackVersion")),
 		},
 	}
 
@@ -218,9 +215,9 @@ func createApplyJob(ctx context.Context, provider common.ConfigurationProvider, 
 			tfStateResp, _ := client.GetJobTfState(ctx, tfStateReq)
 			body, _ := ioutil.ReadAll(tfStateResp.Content)
 			helpers.FatalIfError(err)
-			s.StackIP = getOutputQuery(string(body), query[stack].(map[string]interface{})["outputQuery"])
+			s.StackIP = getOutputQuery(string(body), getStackQuery(s.SourceStackName, "outputQuery"))
 
-			fmt.Printf("\nYou can connect to your bastion/headnode using the command: ssh %s@%s -i <location of the private key>\n\n", query[stack].(map[string]interface{})["stackUser"], s.StackIP)
+			fmt.Printf("\nYou can connect to your bastion/headnode using the command: ssh %s@%s -i <location of the private key>\n\n", getStackQuery(s.SourceStackName, "stackUser"), s.StackIP)
 			break
 		} else if readResp.LifecycleState == "FAILED" {
 			fmt.Printf("\nDeployment failed. Please note that there might be some resources that are already created. Run 'ocihpc delete --stack %s' to delete those resources.\n", stack)

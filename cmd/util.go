@@ -141,7 +141,7 @@ func getConfirmation(prompt string) bool {
 	}
 }
 
-func getStackQuery() map[string]interface{} {
+func getStackQuery(stack string, value string) string {
 	url := "https://raw.githubusercontent.com/oracle-quickstart/oci-ocihpc/master/stacks/stackQuery.json"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -152,5 +152,5 @@ func getStackQuery() map[string]interface{} {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return query
+	return query[stack].(map[string]interface{})[value]
 }
