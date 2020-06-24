@@ -140,3 +140,19 @@ func getConfirmation(prompt string) bool {
 		return getConfirmation(prompt)
 	}
 }
+
+func getQuery() map[string]interface{} {
+	url := "https://raw.githubusercontent.com/OguzPastirmaci/misc/master/stackQuery.json"
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var query map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//fmt.Println(query[stack].(map[string]interface{})[value])
+	//return query[stack].(map[string]interface{})[value]
+	return query
+}
