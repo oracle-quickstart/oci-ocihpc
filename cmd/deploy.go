@@ -83,6 +83,8 @@ Example command: ocihpc deploy --stack ClusterNetwork --node-count 2 --region us
 func init() {
 	rootCmd.AddCommand(deployCmd)
 
+	defaultNodeCount := getStackQuery(s.SourceStackName, "defaultNodeCount")
+
 	deployCmd.Flags().StringP("compartment-id", "c", "", "Unique identifier (OCID) of the compartment that the stack will be deployed in.")
 	deployCmd.MarkFlagRequired("compartment-id")
 
@@ -91,7 +93,7 @@ func init() {
 	deployCmd.Flags().StringP("stack", "s", "", "Name of the stack you want to deploy.")
 	deployCmd.MarkFlagRequired("stack")
 
-	deployCmd.Flags().StringP("node-count", "n", "", "Number of nodes to deploy.")
+	deployCmd.Flags().StringP("node-count", "n", defaultNodeCount, "Number of nodes to deploy.")
 }
 
 func createStack(ctx context.Context, provider common.ConfigurationProvider, client resourcemanager.ResourceManagerClient, compartment string, region string, stack string, nodeCount string) string {
