@@ -10,5 +10,11 @@
         "stackUser": "opc",
         "stackVersion": "0.12.x",
         "defaultNodeCount": "2"
+    },
+    "ANSYSBenchClusterNetwork": {
+        "outputQuery": "bastion",
+        "stackUser": "opc",
+        "stackVersion": "0.12.x",
+        "defaultNodeCount": "2"
     }
 }
