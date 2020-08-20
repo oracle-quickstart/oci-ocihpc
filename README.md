@@ -108,7 +108,7 @@ IMPORTANT: Edit the contents of the /Users/opastirm/ocihpc-test/config.json file
 ```
 
 ### 4 - Deploy
-Before deploying, you need to change the values in `config.json` file. The variables depend on the stack you deploy. An example `config.json` for Cluster Network would look like this:
+Before deploying, you need to change the values in `config.json` file. The variables depend on the stack you deploy. An example `config.json` for Cluster Network would look like below. Make sure you change the below values with your own values. For example, the Availability Domain names will be different.
 
 ```json
 {
