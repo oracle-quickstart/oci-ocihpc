@@ -1,0 +1,11 @@
+    {
+        "ad": "",
+        "bastion_ad": "",
+        "targetCompartment": "",
+        "bastion_shape": "VM.Standard2.1",
+        "node_count": "2",
+        "cluster_network": "false",
+        "instance_pool_shape": "VM.Standard.E3.Flex",
+        "instance_pool_ocpus": "2",
+        "ssh_key": ""
+    }
