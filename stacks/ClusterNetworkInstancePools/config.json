@@ -6,6 +6,9 @@
         "node_count": "2",
         "cluster_network": "false",
         "instance_pool_shape": "VM.Standard.E3.Flex",
-        "instance_pool_ocpus": "2",
-        "ssh_key": ""
+        "instance_pool_ocpus": "32",
+        "ssh_key": "",
+	"bastion_block": "true",
+	"scratch_nfs_type_pool": "block",
+	"cluster_block_volume_size": "1024"
     }
