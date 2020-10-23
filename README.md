@@ -69,7 +69,27 @@ ocihpc.exe version
 ## Using ocihpc
 
 ### 1 - Configure
-Run `ocihpc configure` to check if you have a valid configuration to access OCI. The tool will walk you through creating a configuration. 
+Run ```ocihpc configure``` to check if you have a valid configuration to access OCI. The tool will walk you through creating a configuration.
+
+In order to create your config file, you will need:
+- Your user OCID (found in profile section at the top right of the screen under > user settings > user information tab),
+- Tenancy OCID (Administration > Tenancy Details > Tenancy Information tab), and
+- The region you are working out of (i.e. us-phoenix-1, us-ashburn-1, etc.)
+
+
+You will be notified where your config file is written to:
+```Configuration file saved to: /Users/sergiog/.oci/config```
+
+
+Next, we will ensure that we have uploaded our API keys that we generated in the prerequisites to our user on OCI.
+
+Navigate back to your user settings under the profile icon in OCI. Scroll down to find “API Keys” under the resources section.
+
+To add a public key to your user, you can either:
+Copy and paste the public key (you can get a copy of your key by running this command in the CLI):
+```cat ~/.oci/oci_api_key_public.pem | pbcopy```
+Or, you can select the key file from your files (be sure to use command+shift+. To access your hidden .oci directory)
+Once the key is successfully added, you will notice the fingerprint has been added to your API Keys. 
 
 
 ### 2 - List
@@ -106,6 +126,30 @@ ClusterNetwork downloaded to /Users/opastirm/ocihpc-test/
 
 IMPORTANT: Edit the contents of the /Users/opastirm/ocihpc-test/config.json file before running ocihpc deploy command
 ```
+
+Navigate to your newly created directory (ocihpc-test in this case) and open the “config.json” file using texteditor or notepad. 
+Note that this is not the same config file we configured in step 1.
+
+For this config file, we will need:
+- The availability domain information that contains the HPC resources in our tenancy (Administration > Tenancy Details > Scroll down to the Service Limits section > Compute > and scroll down to find “BM.HPC2.36”) - In the screenshot below, we can see that we have a total of 6 BM.HPC2.36 machines to use in AD-2, 0 of which are currently in use. 
+ 
+
+- The Bastion AD can be any AD you chose as long as there are resources (VM.standard2.1 shape)
+- Bastion shape should be filled in already - VM.Standard2.1
+- Node count: for the purposes of this lab, we will go with 2 so as to use up all HPC resources
+- Your public ssh key 
+
+Here is an example of a completed config.json file:
+```    
+{
+        "ad": "jiVG:US-ASHBURN-AD-2",
+        "bastion_ad": "jiVG:US-ASHBURN-AD-2",
+        "bastion_shape": "VM.Standard2.1",
+        "node_count": "2",
+        "ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCgItPoh4omGT98Xa/IDy3dhO7tmgWT57f/k75pzOhFODRIBbjUMAqcwqjQI6Zd4jager2OSTWx2yczNhOCIZzO+xL5czql9olLI4oxFyN6Cc5S/Renilz2twxfNXTK7eI+3qDt+fz4jht5wWdMKK18QFkp6gtsHLqgVUEfng3rzSxSLJJInhwhJHD+zBSTuo61f6riQAQl+NRUzfF5B/mALe6AejFyRcc3FPRjv3NfLK/gv/Ulzu+KgyTXeNkIMLc0zeNUN8Y3/V36MzHvZ01mRZU47ortJieFXhCNn/Wx6OrsRppKVuW6My1TI4J/U9IZylvGOL2AdDdlMX0QYohZ sergiog@Sergios-MBP-2.attlocal.net"
+    }
+```
+
 
 ### 4 - Deploy
 Before deploying, you need to change the values in `config.json` file. The variables depend on the stack you deploy. An example `config.json` for Cluster Network would look like below. Make sure you change the below values with your own values. For example, the Availability Domain names will be different.
