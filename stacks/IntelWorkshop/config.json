@@ -1,7 +1,0 @@
-    {
-        "ad": "",
-        "bastion_ad": "",
-        "bastion_shape": "VM.Standard2.1",
-        "node_count": "2",
-        "ssh_key": ""
-    }
