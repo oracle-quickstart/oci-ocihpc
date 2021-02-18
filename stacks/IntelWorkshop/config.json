@@ -1,0 +1,8 @@
+    {
+        "tenancy_ocid": "",
+        "region": "",
+        "compartment_ocid": "",
+        "ssh_public_key":"",
+        "compute_shape":"",
+        "ad_number":""
+    }
