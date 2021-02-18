@@ -50,7 +50,7 @@
     "IntelWorkshop": {
         "outputQuery": "bastion",
         "stackUser": "opc",
-        "stackVersion": "0.12.x",
+        "stackVersion": "0.13.x",
         "defaultNodeCount": "2"
     }
 }
