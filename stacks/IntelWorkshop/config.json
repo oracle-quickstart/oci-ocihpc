@@ -1,7 +1,8 @@
     {
-        "ad": "",
-        "bastion_ad": "",
-        "bastion_shape": "VM.Standard2.1",
-        "node_count": "2",
-        "ssh_key": ""
+        "tenancy_ocid": "",
+        "region": "",
+        "compartment_ocid": "",
+        "ssh_public_key":"",
+        "compute_shape":"",
+        "ad_number":""
     }
