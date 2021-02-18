@@ -48,7 +48,7 @@
         "defaultNodeCount": "2"
     },
     "IntelWorkshop": {
-        "outputQuery": "bastion",
+        "outputQuery": "public_ip_address",
         "stackUser": "opc",
         "stackVersion": "0.13.x",
         "defaultNodeCount": "2"
